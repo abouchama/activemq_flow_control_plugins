@@ -1,0 +1,59 @@
+<!-- beans xmlns="http://www.springframework.org/schema/beans" xmlns:amq="http://activemq.apache.org/schema/core" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://activemq.apache.org/schema/core 
+	http://activemq.apache.org/schema/core/activemq-core.xsd" -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		id="settings">
+		<property name="location"
+			value="file:///${activemq.base}/conf/activemq.properties" />
+		<property name="searchSystemEnvironment" value="true" />
+	</bean>
+
+	<broker xmlns="http://activemq.apache.org/schema/core"
+		brokerName="localhost" dataDirectory="data" start="false">
+
+		<persistenceAdapter>
+			<kahaDB directory="data/kahadb" />
+		</persistenceAdapter>
+		<plugins>
+			<bean xmlns="http://www.springframework.org/schema/beans" id="FlowControlQueuePlugin"
+				class="com.abouchama.activemq.FlowControlQueuePlugin">
+				<property name="MaxSizePerMessage" value="1100" />
+				<property name="MaxProducersPerQueue" value="10" />
+			</bean>
+			<bean xmlns="http://www.springframework.org/schema/beans" id="BrokerResourcesControlPlugin"
+				class="com.abouchama.activemq.BrokerResourcesControlPlugin">
+				<property name="MaxQueues" value="2" />
+				<property name="MaxMessages" value="10" />
+				<property name="MaxProducers" value="1" />
+				<property name="MaxConsumers" value="1" />
+			</bean>
+		</plugins>
+
+		<systemUsage>
+			<systemUsage>
+				<memoryUsage>
+					<memoryUsage limit="64mb" />
+				</memoryUsage>
+				<storeUsage>
+					<storeUsage limit="1gb" />
+				</storeUsage>
+				<tempUsage>
+					<tempUsage limit="512mb" />
+				</tempUsage>
+			</systemUsage>
+		</systemUsage>
+		<networkConnectors>
+		</networkConnectors>
+		<transportConnectors>
+			<transportConnector name="openwire"
+				uri="tcp://0.0.0.0:41626" />
+		</transportConnectors>
+	</broker>
+</beans>
