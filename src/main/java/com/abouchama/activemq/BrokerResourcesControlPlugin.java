@@ -45,5 +45,5 @@ public class BrokerResourcesControlPlugin implements BrokerPlugin {
 	public Broker installPlugin(Broker broker) throws Exception {
 		return new BrokerResourcesControl(broker, MaxQueues, MaxMessages, MaxConsumers, MaxProducers);
 	}
-
+	
 }

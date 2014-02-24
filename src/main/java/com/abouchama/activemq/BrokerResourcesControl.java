@@ -4,9 +4,7 @@ import org.apache.activemq.broker.Broker;
 import org.apache.activemq.broker.BrokerFilter;
 import org.apache.activemq.broker.ConnectionContext;
 import org.apache.activemq.broker.region.Subscription;
-import org.apache.activemq.command.ConnectionInfo;
 import org.apache.activemq.command.ConsumerInfo;
-import org.apache.activemq.command.DestinationInfo;
 import org.apache.activemq.command.ProducerInfo;
 import org.apache.activemq.command.SessionInfo;
 import org.slf4j.Logger;
@@ -25,11 +23,6 @@ public class BrokerResourcesControl extends BrokerFilter {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(BrokerResourcesControl.class);
-
-	/* Per Broker */
-	// MaxQueues >= TotalQueuesCount
-	// MaxProducers >= TotalProducerCount
-	// MaxConsumers >= TotalConsumerCount
 
 	long MaxQueues = 999999999;
 	long MaxProducers = 999999999;
@@ -52,7 +45,7 @@ public class BrokerResourcesControl extends BrokerFilter {
 
 	public void addProducer(ConnectionContext context, ProducerInfo info)
 			throws Exception {
-		LOG.info("A - MaxProducers - Welcome to the Managing Broker Capacity plugin - made by ABOUCHAMA");
+		LOG.info("A - MaxProducers - Welcome to the Managing Broker Capacity plugin");
 		long TotalProducerCount = context.getBroker().getBrokerService()
 				.getAdminView().getTotalProducerCount();
 		LOG.info("B - MaxProducers -  MaxProducers : " + MaxProducers
@@ -76,7 +69,7 @@ public class BrokerResourcesControl extends BrokerFilter {
 
 	public Subscription addConsumer(ConnectionContext context, ConsumerInfo info)
 			throws Exception {
-		LOG.info("A - MaxConsumers - Welcome to the Managing Broker Capacity plugin - made by ABOUCHAMA");
+		LOG.info("A - MaxConsumers - Welcome to the Managing Broker Capacity plugin");
 		long TotalConsumerCount = context.getBroker().getBrokerService()
 				.getAdminView().getTotalConsumerCount();
 		LOG.info("B - MaxConsumers -  MaxConsumers : " + MaxConsumers
@@ -100,14 +93,14 @@ public class BrokerResourcesControl extends BrokerFilter {
 
 	public void addSession(ConnectionContext context, SessionInfo info)
 			throws Exception {
-		LOG.info("A - MaxQueues|MaxMessages - Welcome to the Managing Broker Capacity plugin - made by ABOUCHAMA");
+		LOG.info("A - MaxQueues|MaxMessages - Welcome to the Managing Broker Capacity plugin");
 		long TotalQueuesCount = context.getBroker().getBrokerService()
 				.getAdminView().getBroker().getQueueViews().size();
 		long TotalMessageCount = context.getBroker().getBrokerService()
 				.getAdminView().getTotalMessageCount();
 		LOG.info("B - MaxQueues|MaxMessages - TotalQueuesCount : [" + TotalQueuesCount +  "] MaxQueues : [" + MaxQueues+"] - TotalMessageCount : [" + TotalMessageCount +  "] MaxMessages : [" + MaxMessages+"]");
 
-		while (MaxQueues < TotalQueuesCount) {
+		while (MaxQueues <= TotalQueuesCount) {
 			LOG.error("C - MaxQueues - Connection is blocked MaxQueues : [" + MaxQueues
 					+ "] > TotalQueuesCount :[" + TotalQueuesCount + "]");
 			context.getConnection().isBlocked();
@@ -116,7 +109,7 @@ public class BrokerResourcesControl extends BrokerFilter {
 			TotalQueuesCount = context.getBroker().getBrokerService()
 					.getAdminView().getBroker().getQueueViews().size();
 		}
-		while (MaxMessages < TotalMessageCount) {
+		while (MaxMessages <= TotalMessageCount) {
 			LOG.error("C - MaxMessages - Connection is blocked MaxMessages : [" + MaxMessages
 					+ "] > TotalMessageCount :[" + TotalMessageCount + "]");
 			context.getConnection().isBlocked();

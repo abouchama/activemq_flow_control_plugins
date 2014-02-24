@@ -11,9 +11,8 @@ Below is an example of a basic configuration:
 <plugins>
 	<bean xmlns="http://www.springframework.org/schema/beans" id="FlowControlQueuePlugin"
 				class="com.abouchama.activemq.FlowControlQueuePlugin">
-		<property name="MaxSizePerMessage" value="1100" />
-		<property name="MaxMessagesPerQueue" value="1100" />
-		<property name="MaxProducersPerQueue" value="10" />
+		<property name="MaxSizePerMessage" value="400000" />
+		<property name="MaxMessagesPerQueue" value="99" />
 	</bean>
 </plugins>
 
@@ -31,15 +30,15 @@ Below is an example of a basic configuration:
 	<bean xmlns="http://www.springframework.org/schema/beans" id="BrokerResourcesControlPlugin"
 				class="com.abouchama.activemq.BrokerCapacityPlugin">
 				<property name="MaxQueues" value="99" />
-				<property name="MaxMessages" value="999" />
+				<property name="MaxMessages" value="9999" />
 				<property name="MaxProducers" value="50" />
 				<property name="MaxConsumers" value="100" />
 	</bean>
 </plugins>
 
-The association of these 2 plugins allow to determine the capacity of the broker, that can be provisionned based on simple monitoring solution.
+The association of these 2 plugins allow to determine the capacity of the broker, that can be provisioned based on simple monitoring solution.
 
 For more help see the blog :
-    http://abouchama.blogspot.fr/
+    http://a-bouchama.blogspot.fr/
 
 Enjoy ;)

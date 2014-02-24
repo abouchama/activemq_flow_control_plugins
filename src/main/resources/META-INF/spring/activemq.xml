@@ -16,7 +16,7 @@
 	</bean>
 
 	<broker xmlns="http://activemq.apache.org/schema/core"
-		brokerName="localhost" dataDirectory="data" start="false">
+		brokerName="localhost" dataDirectory="data" start="false" useJmx="true">
 
 		<persistenceAdapter>
 			<kahaDB directory="data/kahadb" />
@@ -24,12 +24,11 @@
 		<plugins>
 			<bean xmlns="http://www.springframework.org/schema/beans" id="FlowControlQueuePlugin"
 				class="com.abouchama.activemq.FlowControlQueuePlugin">
-				<property name="MaxSizePerMessage" value="1100" />
-				<property name="MaxProducersPerQueue" value="10" />
+				<property name="MaxSizePerMessage" value="1200" />
 			</bean>
 			<bean xmlns="http://www.springframework.org/schema/beans" id="BrokerResourcesControlPlugin"
 				class="com.abouchama.activemq.BrokerResourcesControlPlugin">
-				<property name="MaxQueues" value="2" />
+				<property name="MaxQueues" value="4" />
 				<property name="MaxMessages" value="10" />
 				<property name="MaxProducers" value="1" />
 				<property name="MaxConsumers" value="1" />
